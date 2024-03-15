@@ -1,13 +1,3 @@
-"""
-
-Ethan Ali
-Sign Language MNIST for Convolutional Networks
-
-Data retrieved from:
-https://www.kaggle.com/datasets/datamunge/sign-language-mnist
-
-"""
-
 import csv
 import string
 import numpy as np
@@ -77,6 +67,16 @@ def train_val_generators(training_images, training_labels, validation_images, va
 
     return train_generator, validation_generator
 
+# Callback (stops training when accuracy metric is reached)
+class myCallback(tf.keras.callbacks.Callback):
+  def on_epoch_end(self, epoch, logs={}):
+    if(logs.get('val_acc') > 0.99):
+      print("\nRequired validation accuracy is met so cancelling training!")
+      self.model.stop_training = True
+
+# Instantiate the callback
+callbacks = myCallback()
+
 def create_model():
     # Defining the neural network (Conv2D & MaxPooling2D layers)
     model = tf.keras.models.Sequential([
@@ -126,5 +126,3 @@ plt.title('Training and validation loss')
 plt.legend()
 
 plt.show()
-
-# Created by Ethan Ali
